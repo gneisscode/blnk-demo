@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+     "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@types": ["types"],
+      "@utils/*": ["utils/*"],
+      "@hooks": ["hooks/index"],
+      "@services": ["services/index"],
+      "@pages": ["components/pages/*"],
+      "@layouts": ["components/layouts/index"],
+      "@blnk-ui": ["components/blnk-ui/index"],
+      "@shared": ["components/shared/index"],
+      "@blnk-icons": ["components/blnk-icons/index"],
+      "@blnk-illustrations": ["components/blnk-illustrations/index"],
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
