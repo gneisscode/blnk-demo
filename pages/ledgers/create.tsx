@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { ledgerService } from "@/services/ledgerService";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { ArrowLeft } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,7 +23,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Ledger } from "@/services/ledgerService";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -40,36 +38,10 @@ const formSchema = z.object({
   }),
 });
 
-export const CreateLedger = () => {
+export default function CreateLedgerPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [ledgers, setLedgers] = useState<Ledger[]>([]);
-  const [fetchingLedgers, setFetchingLedgers] = useState(false);
-  useEffect(() => {
-    const fetchLedgers = async () => {
-      setFetchingLedgers(true);
-      try {
-        const response = await fetch("/api/ledgers");
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setLedgers(data);
-      } catch (err: any) {
-        toast.error("Failed to fetch ledgers", {
-          description:
-            err.message || "An error occurred while fetching ledgers.",
-          duration: 5000,
-        });
-      } finally {
-        setFetchingLedgers(false);
-      }
-    };
-
-    fetchLedgers();
-  }, []);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -115,16 +87,20 @@ export const CreateLedger = () => {
   };
 
   return (
-    <div className="container max-w-4xl py-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-none shadow-lg bg-gradient-to-br from-white to-gray-50">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Create New Ledger
-            </CardTitle>
-            <CardDescription className="text-gray-500">
-              Set up a new ledger to manage your financial transactions
-            </CardDescription>
+    <div className="min-h-screen p-8">
+      <div className="max-w-7xl mx-auto">
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center space-x-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Ledgers</span>
+        </Button>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Create New Ledger</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -137,14 +113,11 @@ export const CreateLedger = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-700">
-                        Ledger Name
-                      </FormLabel>
+                      <FormLabel>Ledger Name</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter ledger name"
                           {...field}
-                          className="bg-white"
                         />
                       </FormControl>
                       <FormDescription>
@@ -160,14 +133,11 @@ export const CreateLedger = () => {
                   name="meta_data.project_owner"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-700">
-                        Project Owner
-                      </FormLabel>
+                      <FormLabel>Project Owner</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter project owner"
                           {...field}
-                          className="bg-white"
                         />
                       </FormControl>
                       <FormDescription>
@@ -183,14 +153,12 @@ export const CreateLedger = () => {
                   name="meta_data.description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-700">
-                        Description
-                      </FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Enter description"
                           {...field}
-                          className="bg-white min-h-[100px]"
+                          className="min-h-[100px]"
                         />
                       </FormControl>
                       <FormDescription>
@@ -205,7 +173,6 @@ export const CreateLedger = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
                   >
                     {loading ? (
                       <div className="flex items-center gap-2">
@@ -221,46 +188,7 @@ export const CreateLedger = () => {
             </Form>
           </CardContent>
         </Card>
-
-        <Card className="border-none shadow-lg bg-gradient-to-br from-white to-gray-50">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Existing Ledgers
-            </CardTitle>
-            <CardDescription className="text-gray-500">
-              List of all your ledgers
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {fetchingLedgers ? (
-              <div className="flex justify-center items-center h-32">
-                <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-              </div>
-            ) : ledgers.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">No ledgers found</p>
-            ) : (
-              <div className="space-y-4">
-                {ledgers.map((ledger) => (
-                  <div
-                    key={ledger.ledger_id}
-                    className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <h3 className="font-semibold text-lg">{ledger.name}</h3>
-                    <p className="text-sm text-gray-500">
-                      {ledger.meta_data?.description ||
-                        "No description provided"}
-                    </p>
-                    <div className="mt-2 text-xs text-gray-400">
-                      Created:{" "}
-                      {new Date(ledger.created_at).toLocaleDateString()}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
-};
+}

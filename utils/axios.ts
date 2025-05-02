@@ -3,44 +3,16 @@ import router from "next/router";
 
 export const baseURL = "http://localhost:5001";
 
-export const axiosWithoutToken = axios.create({
-  baseURL,
+
+
+
+const blnkApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BLNK_API_BASE || 'http://localhost:5001',
   headers: {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
+    'Content-Type': 'application/json',
+    'X-Blnk-Key': process.env.NEXT_PUBLIC_BLNK_API_KEY
   }
 });
 
-export const axiosWithToken = () => {
-  const apiKey = process.env.NEXT_PUBLIC_BLNK_API_KEY;
+export default blnkApi;
 
-  return axios.create({
-    baseURL,
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "X-Blnk-Key": apiKey,
-    }
-  });
-};
-
-export const handleAxiosError = (err: any, thunkAPI: any) => {
-  const { message, status } = err.toJSON();
-
-  if (status === 401) {
-    router.push("/auth/sign-in");
-    router.reload();
-  }
-
-  if (message === "Network Error") {
-    throw thunkAPI.rejectWithValue({
-      status: 500,
-      message: "You are offline",
-    });
-  } else {
-    throw thunkAPI.rejectWithValue({
-      status: err.response?.status || 0,
-      message: err.response?.data?.message || "An error occurred",
-    });
-  }
-};
