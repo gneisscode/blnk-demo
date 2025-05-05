@@ -9,6 +9,7 @@ import {
   Plus,
   List,
   FileText,
+  CreditCard,
 } from "lucide-react";
 
 export default function Home() {
@@ -63,6 +64,23 @@ export default function Home() {
           label: "Create Wallet",
           icon: Plus,
           href: "/wallets/create",
+        },
+      ],
+    },
+    {
+      title: "Card Balances",
+      description: "Create and manage card balances linked to customer identities",
+      icon: CreditCard,
+      actions: [
+        {
+          label: "View All Balances",
+          icon: List,
+          href: "/balances/list",
+        },
+        {
+          label: "Create Balance",
+          icon: Plus,
+          href: "/balances/create",
         },
       ],
     },

@@ -74,7 +74,7 @@ export default function CreateLedgerPage() {
         description: `Ledger "${values.name}" has been created.`,
         duration: 5000,
       });
-      router.push("/ledgers");
+      router.push("/ledgers/list");
     } catch (err: any) {
       toast.error("Failed to create ledger", {
         description:

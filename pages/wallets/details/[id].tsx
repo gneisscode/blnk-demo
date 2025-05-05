@@ -122,8 +122,8 @@ export default function WalletDetails() {
           precision: 100,
           reference: `WD-${Date.now()}`,
           description: withdrawDescription || "Withdrawal from wallet",
-          currency: wallet.currency,
-          source: wallet.balance_id,
+          currency: wallet?.currency,
+          source: wallet?.balance_id,
           destination: "@WorldUSD", // This should be your main wallet ID
           allow_overdraft: false,
           meta_data: {
@@ -171,9 +171,9 @@ export default function WalletDetails() {
           precision: 100,
           reference: `DEP-${Date.now()}`,
           description: fundDescription || "Deposit to wallet",
-          currency: wallet.currency,
+          currency: wallet?.currency,
           source: "@WorldUSD", // This should be your main wallet ID
-          destination: wallet.balance_id,
+          destination: wallet?.balance_id,
           allow_overdraft: true,
           meta_data: {
             transaction_type: "deposit",
@@ -268,7 +268,7 @@ export default function WalletDetails() {
                       <DialogHeader>
                         <DialogTitle className="text-gray-900">Fund Wallet</DialogTitle>
                         <DialogDescription className="text-gray-500">
-                          Enter the amount you want to deposit into this wallet.
+                          Enter the amount you want to deposit into this wallet?.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
@@ -324,7 +324,7 @@ export default function WalletDetails() {
                       <DialogHeader>
                         <DialogTitle className="text-gray-900">Withdraw from Wallet</DialogTitle>
                         <DialogDescription className="text-gray-500">
-                          Enter the amount you want to withdraw from this wallet.
+                          Enter the amount you want to withdraw from this wallet?.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
@@ -380,16 +380,16 @@ export default function WalletDetails() {
                   <dl className="space-y-4">
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Wallet ID</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{wallet.balance_id}</dd>
+                      <dd className="mt-1 text-sm text-gray-900">{wallet?.balance_id}</dd>
                     </div>
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Currency</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{wallet.currency}</dd>
+                      <dd className="mt-1 text-sm text-gray-900">{wallet?.currency}</dd>
                     </div>
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Balance</dt>
                       <dd className="mt-1 text-sm text-gray-900">
-                        {wallet.balance} {wallet.currency}
+                        {wallet?.balance} {wallet?.currency}
                       </dd>
                     </div>
                   </dl>
@@ -402,13 +402,13 @@ export default function WalletDetails() {
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Wallet Type</dt>
                       <dd className="mt-1 text-sm text-gray-900">
-                        {wallet.meta_data.wallet_type}
+                        {wallet?.meta_data?.wallet_type}
                       </dd>
                     </div>
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Purpose</dt>
                       <dd className="mt-1 text-sm text-gray-900">
-                        {wallet.meta_data.purpose}
+                        {wallet?.meta_data?.purpose}
                       </dd>
                     </div>
                     <div>
@@ -416,12 +416,12 @@ export default function WalletDetails() {
                       <dd className="mt-1">
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            wallet.meta_data.status === "active"
+                            wallet?.meta_data?.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
-                          {wallet.meta_data.status}
+                          {wallet?.meta_data?.status}
                         </span>
                       </dd>
                     </div>
@@ -448,7 +448,7 @@ export default function WalletDetails() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => router.push(`/ledgers/details/${wallet.ledger_id}`)}
+                      onClick={() => router.push(`/ledgers/details/${wallet?.ledger_id}`)}
                       className="flex items-center space-x-2"
                     >
                       <span>View Details</span>
@@ -470,7 +470,7 @@ export default function WalletDetails() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => router.push(`/identities/details/${wallet.identity_id}`)}
+                      onClick={() => router.push(`/identities/details/${wallet?.identity_id}`)}
                       className="flex items-center space-x-2"
                     >
                       <span>View Details</span>
@@ -502,7 +502,7 @@ export default function WalletDetails() {
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Created At</dt>
                   <dd className="mt-1 text-sm text-gray-900">
-                    {new Date(wallet.created_at).toLocaleString()}
+                    {new Date(wallet?.created_at).toLocaleString()}
                   </dd>
                 </div>
               </dl>

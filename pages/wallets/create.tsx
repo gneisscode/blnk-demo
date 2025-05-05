@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
-interface Ledger {
+export interface Ledger {
   ledger_id: string;
   name: string;
   currency: string;
 }
 
-interface Identity {
+export interface Identity {
   identity_id: string;
   first_name: string;
   last_name: string;
