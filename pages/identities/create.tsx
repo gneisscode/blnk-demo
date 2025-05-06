@@ -73,27 +73,26 @@ export default function CreateIdentity() {
   };
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Identities
-          </button>
-        </div>
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Identities</span>
+        </Button>
 
-        <Card>
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <CardTitle>Create New Identity</CardTitle>
+            <CardTitle className="text-2xl font-bold text-yellow-main">Create New Identity</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Identity Type</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Identity Type</label>
                   <Select
                     value={formData.identity_type}
                     onValueChange={(value) =>
@@ -101,82 +100,86 @@ export default function CreateIdentity() {
                     }
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="individual">Individual</SelectItem>
-                      <SelectItem value="organization">Organization</SelectItem>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="individual" className="text-white hover:bg-white/10">Individual</SelectItem>
+                      <SelectItem value="organization" className="text-white hover:bg-white/10">Organization</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {formData.identity_type === "organization" && (
                   <div>
-                    <label className="block text-sm font-medium mb-1">Organization Name</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">Organization Name</label>
                     <Input
                       value={formData.organization_name}
                       onChange={(e) =>
                         setFormData({ ...formData, organization_name: e.target.value })
                       }
                       required={formData.identity_type === "organization"}
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">First Name</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">First Name</label>
                   <Input
                     value={formData.first_name}
                     onChange={(e) =>
                       setFormData({ ...formData, first_name: e.target.value })
                     }
                     required={formData.identity_type === "individual"}
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Last Name</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Last Name</label>
                   <Input
                     value={formData.last_name}
                     onChange={(e) =>
                       setFormData({ ...formData, last_name: e.target.value })
                     }
                     required={formData.identity_type === "individual"}
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Other Names</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Other Names</label>
                   <Input
                     value={formData.other_names}
                     onChange={(e) =>
                       setFormData({ ...formData, other_names: e.target.value })
                     }
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Gender</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Gender</label>
                   <Select
                     value={formData.gender}
                     onValueChange={(value) =>
                       setFormData({ ...formData, gender: value })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="male" className="text-white hover:bg-white/10">Male</SelectItem>
+                      <SelectItem value="female" className="text-white hover:bg-white/10">Female</SelectItem>
+                      <SelectItem value="other" className="text-white hover:bg-white/10">Other</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Date of Birth</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Date of Birth</label>
                   <Input
                     type="date"
                     value={formData.dob.split("T")[0]}
@@ -186,11 +189,12 @@ export default function CreateIdentity() {
                         dob: new Date(e.target.value).toISOString(),
                       })
                     }
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email Address</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Email Address</label>
                   <Input
                     type="email"
                     value={formData.email_address}
@@ -198,32 +202,35 @@ export default function CreateIdentity() {
                       setFormData({ ...formData, email_address: e.target.value })
                     }
                     required
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Phone Number</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Phone Number</label>
                   <Input
                     value={formData.phone_number}
                     onChange={(e) =>
                       setFormData({ ...formData, phone_number: e.target.value })
                     }
                     required
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Nationality</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Nationality</label>
                   <Input
                     value={formData.nationality}
                     onChange={(e) =>
                       setFormData({ ...formData, nationality: e.target.value })
                     }
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Category</label>
+                  <label className="block text-sm font-medium mb-2 text-white/90">Category</label>
                   <Select
                     value={formData.category}
                     onValueChange={(value) =>
@@ -231,78 +238,83 @@ export default function CreateIdentity() {
                     }
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="customer">Customer</SelectItem>
-                      <SelectItem value="vendor">Vendor</SelectItem>
-                      <SelectItem value="employee">Employee</SelectItem>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="customer" className="text-white hover:bg-white/10">Customer</SelectItem>
+                      <SelectItem value="vendor" className="text-white hover:bg-white/10">Vendor</SelectItem>
+                      <SelectItem value="employee" className="text-white hover:bg-white/10">Employee</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-medium mb-4">Address Information</h3>
+              <div className="border-t border-white/10 pt-6">
+                <h3 className="text-lg font-medium mb-4 text-yellow-main">Address Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Street</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">Street</label>
                     <Input
                       value={formData.street}
                       onChange={(e) =>
                         setFormData({ ...formData, street: e.target.value })
                       }
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1">City</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">City</label>
                     <Input
                       value={formData.city}
                       onChange={(e) =>
                         setFormData({ ...formData, city: e.target.value })
                       }
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1">State/Province</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">State/Province</label>
                     <Input
                       value={formData.state}
                       onChange={(e) =>
                         setFormData({ ...formData, state: e.target.value })
                       }
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1">Postal Code</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">Postal Code</label>
                     <Input
                       value={formData.post_code}
                       onChange={(e) =>
                         setFormData({ ...formData, post_code: e.target.value })
                       }
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1">Country</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">Country</label>
                     <Input
                       value={formData.country}
                       onChange={(e) =>
                         setFormData({ ...formData, country: e.target.value })
                       }
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-medium mb-4">Additional Information</h3>
+              <div className="border-t border-white/10 pt-6">
+                <h3 className="text-lg font-medium mb-4 text-yellow-main">Additional Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Customer ID</label>
+                    <label className="block text-sm font-medium mb-2 text-white/90">Customer ID</label>
                     <Input
                       value={formData.meta_data.customer_id}
                       onChange={(e) =>
@@ -314,48 +326,26 @@ export default function CreateIdentity() {
                           },
                         })
                       }
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                     />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Membership Level</label>
-                    <Select
-                      value={formData.meta_data.membership_level}
-                      onValueChange={(value) =>
-                        setFormData({
-                          ...formData,
-                          meta_data: {
-                            ...formData.meta_data,
-                            membership_level: value,
-                          },
-                        })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Standard">Standard</SelectItem>
-                        <SelectItem value="Silver">Silver</SelectItem>
-                        <SelectItem value="Gold">Gold</SelectItem>
-                        <SelectItem value="Platinum">Platinum</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4">
+              <div className="flex justify-end">
                 <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.back()}
+                  type="submit"
                   disabled={loading}
+                  className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
                 >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? "Creating..." : "Create Identity"}
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-black-main border-t-transparent rounded-full animate-spin" />
+                      Creating...
+                    </div>
+                  ) : (
+                    "Create Identity"
+                  )}
                 </Button>
               </div>
             </form>

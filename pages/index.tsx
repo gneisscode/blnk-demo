@@ -18,7 +18,7 @@ export default function Home() {
   const features = [
     {
       title: "Identity Management",
-      description: "Create and manage customer identities with comprehensive details",
+      description: "Create and manage customer identities",
       icon: Users,
       actions: [
         {
@@ -87,37 +87,40 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Welcome to Blnk Demo
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-yellow-main mb-6 animate-fade-in">
+            Welcome to Wallet Management System
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            A comprehensive platform for managing identities, ledgers, and wallets
+          <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+            A comprehensive platform for managing customers, ledgers, and wallets
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
           {features.map((feature) => (
-            <Card key={feature.title} className="hover:shadow-lg transition-shadow">
+            <Card 
+              key={feature.title} 
+              className="hover:shadow-xl transition-all duration-300 cursor-pointer bg-white/5 backdrop-blur-sm border-white/10 hover:border-yellow-main/30 hover:scale-[1.02]"
+            >
               <CardHeader>
-                <div className="flex items-center space-x-2">
-                  <feature.icon className="w-6 h-6 text-indigo-500" />
-                  <CardTitle>{feature.title}</CardTitle>
+                <div className="flex items-center space-x-3">
+                  <feature.icon className="w-7 h-7 text-yellow-main" />
+                  <CardTitle className="text-yellow-main text-xl">{feature.title}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-6">{feature.description}</p>
+                <p className="text-white/80 mb-6 leading-relaxed">{feature.description}</p>
                 <div className="space-y-3">
                   {feature.actions.map((action) => (
                     <Button
                       key={action.label}
                       variant="outline"
-                      className="w-full justify-between"
+                      className="w-full justify-between hover:bg-yellow-main/10 hover:text-yellow-main border-white/20 text-white transition-colors duration-200"
                       onClick={() => router.push(action.href)}
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <action.icon className="w-4 h-4" />
                         <span>{action.label}</span>
                       </div>
@@ -130,11 +133,11 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+        <div className="mt-10 text-center max-w-4xl mx-auto">
+          <h2 className="text-3xl font-semibold text-yellow-main mb-6">
             Getting Started
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+          <p className="text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
             Begin by creating an identity for your customer, then set up a ledger and
             wallet to start managing their financial transactions.
           </p>
@@ -142,19 +145,10 @@ export default function Home() {
             <Button
               size="lg"
               onClick={() => router.push("/identities/create")}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 bg-yellow-main text-black-main cursor-pointer hover:bg-yellow-main/90 transition-colors duration-200"
             >
               <Users className="w-5 h-5" />
               <span>Create Your First Identity</span>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => router.push("/identities/list")}
-              className="flex items-center space-x-2"
-            >
-              <FileText className="w-5 h-5" />
-              <span>View Documentation</span>
             </Button>
           </div>
         </div>

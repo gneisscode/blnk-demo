@@ -157,62 +157,61 @@ export default function FundCard() {
   };
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="flex items-center space-x-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back</span>
+        </Button>
 
         {loading ? (
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
           </div>
         ) : error || !cardBalance ? (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded">
             {error || "Card not found"}
           </div>
         ) : (
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
               <div className="flex items-center space-x-2">
-                <CreditCard className="w-6 h-6" />
-                <CardTitle>Fund Card</CardTitle>
+                <CreditCard className="w-6 h-6 text-yellow-main" />
+                <CardTitle className="text-2xl font-bold text-yellow-main">Fund Card</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2">Card Details</h3>
+                <h3 className="text-lg font-medium text-white mb-4">Card Details</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500">Card Number</p>
-                    <p className="font-medium">
-                      {cardBalance.meta_data?.card_details?.masked_number ||
-                        "N/A"}
+                    <p className="text-sm text-white/70">Card Number</p>
+                    <p className="font-medium text-white">
+                      {cardBalance.meta_data?.card_details?.masked_number || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Current Balance</p>
-                    <p className="font-medium">
-                      {cardBalance.currency}{" "}
-                      {(cardBalance.balance / 100).toFixed(2)}
+                    <p className="text-sm text-white/70">Current Balance</p>
+                    <p className="font-medium text-white">
+                      {cardBalance.currency} {(cardBalance.balance / 100).toFixed(2)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Card Type</p>
-                    <p className="font-medium capitalize">
+                    <p className="text-sm text-white/70">Card Type</p>
+                    <p className="font-medium text-white capitalize">
                       {cardBalance.meta_data?.card_details?.type || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Expiry Date</p>
-                    <p className="font-medium">
+                    <p className="text-sm text-white/70">Expiry Date</p>
+                    <p className="font-medium text-white">
                       {cardBalance.meta_data?.card_details?.expiry || "N/A"}
                     </p>
                   </div>
@@ -222,20 +221,21 @@ export default function FundCard() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="sourceWallet">Source Wallet</Label>
+                    <Label htmlFor="sourceWallet" className="text-white/70">Source Wallet</Label>
                     <Select
                       value={sourceWallet}
                       onValueChange={setSourceWallet}
                       required
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/5 border-white/10 text-white">
                         <SelectValue placeholder="Select a wallet" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-black-main border-white/10">
                         {wallets.map((wallet) => (
                           <SelectItem
                             key={wallet.balance_id}
                             value={wallet.balance_id}
+                            className="text-white hover:bg-white/10"
                           >
                             {wallet.currency} Wallet: {(wallet.balance / 100).toFixed(2)}
                           </SelectItem>
@@ -245,17 +245,16 @@ export default function FundCard() {
                   </div>
 
                   <div>
-                    <Label htmlFor="amount">Amount</Label>
+                    <Label htmlFor="amount" className="text-white/70">Amount</Label>
                     <div className="relative">
                       <Input
                         id="amount"
                         type="number"
-                        step="0.01"
-                        min="0"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        required
                         placeholder="Enter amount"
+                        required
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
                       />
                     </div>
                   </div>
@@ -263,10 +262,20 @@ export default function FundCard() {
 
                 <Button
                   type="submit"
-                  className="w-full"
                   disabled={processing || !amount || !sourceWallet}
+                  className="w-full bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
                 >
-                  {processing ? "Processing..." : "Fund Card"}
+                  {processing ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="relative w-4 h-4">
+                        <div className="absolute inset-0 border-2 border-black-main/20 rounded-full"></div>
+                        <div className="absolute inset-0 border-2 border-t-black-main rounded-full animate-spin"></div>
+                      </div>
+                      <span>Processing...</span>
+                    </div>
+                  ) : (
+                    "Fund Card"
+                  )}
                 </Button>
               </form>
             </CardContent>

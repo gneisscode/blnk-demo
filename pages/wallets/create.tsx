@@ -116,21 +116,36 @@ export default function CreateWallet() {
     });
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen p-8 bg-black-main">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-center">
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-2xl mx-auto">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-6 flex items-center space-x-2"
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Wallets</span>
         </Button>
 
-        <Card>
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
+            <CardTitle className="flex items-center space-x-2 text-yellow-main">
               <Wallet className="w-5 h-5" />
               <span>Create New Wallet</span>
             </CardTitle>
@@ -138,19 +153,19 @@ export default function CreateWallet() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="ledger">Ledger</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="ledger" className="text-white/90">Ledger</Label>
                   <Select
                     value={formData.ledger_id}
                     onValueChange={handleLedgerChange}
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select a ledger" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-black-main border-white/10">
                       {ledgers.map((ledger) => (
-                        <SelectItem key={ledger.ledger_id} value={ledger.ledger_id}>
+                        <SelectItem key={ledger.ledger_id} value={ledger.ledger_id} className="text-white hover:bg-white/10">
                           {ledger.name}
                         </SelectItem>
                       ))}
@@ -158,27 +173,27 @@ export default function CreateWallet() {
                   </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="currency">Currency</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="currency" className="text-white/90">Currency</Label>
                   <Select
                     value={formData.currency}
                     onValueChange={handleCurrencyChange}
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
-                      <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="NGN">NGN - Nigerian Naira</SelectItem>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="USD" className="text-white hover:bg-white/10">USD - US Dollar</SelectItem>
+                      <SelectItem value="EUR" className="text-white hover:bg-white/10">EUR - Euro</SelectItem>
+                      <SelectItem value="GBP" className="text-white hover:bg-white/10">GBP - British Pound</SelectItem>
+                      <SelectItem value="NGN" className="text-white hover:bg-white/10">NGN - Nigerian Naira</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="identity">Identity</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="identity" className="text-white/90">Identity</Label>
                   <Select
                     value={formData.identity_id}
                     onValueChange={(value) =>
@@ -186,12 +201,12 @@ export default function CreateWallet() {
                     }
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select an identity" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-black-main border-white/10">
                       {identities.map((identity) => (
-                        <SelectItem key={identity.identity_id} value={identity.identity_id}>
+                        <SelectItem key={identity.identity_id} value={identity.identity_id} className="text-white hover:bg-white/10">
                           {identity.first_name} {identity.last_name} ({identity.email_address})
                         </SelectItem>
                       ))}
@@ -199,8 +214,8 @@ export default function CreateWallet() {
                   </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="wallet_type">Wallet Type</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="wallet_type" className="text-white/90">Wallet Type</Label>
                   <Select
                     value={formData.meta_data.wallet_type}
                     onValueChange={(value) =>
@@ -211,19 +226,19 @@ export default function CreateWallet() {
                     }
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select wallet type" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="personal">Personal</SelectItem>
-                      <SelectItem value="business">Business</SelectItem>
-                      <SelectItem value="savings">Savings</SelectItem>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="personal" className="text-white hover:bg-white/10">Personal</SelectItem>
+                      <SelectItem value="business" className="text-white hover:bg-white/10">Business</SelectItem>
+                      <SelectItem value="savings" className="text-white hover:bg-white/10">Savings</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="purpose">Purpose</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="purpose" className="text-white/90">Purpose</Label>
                   <Select
                     value={formData.meta_data.purpose}
                     onValueChange={(value) =>
@@ -234,14 +249,14 @@ export default function CreateWallet() {
                     }
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Select purpose" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="general">General</SelectItem>
-                      <SelectItem value="savings">Savings</SelectItem>
-                      <SelectItem value="investment">Investment</SelectItem>
-                      <SelectItem value="business">Business</SelectItem>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="general" className="text-white hover:bg-white/10">General</SelectItem>
+                      <SelectItem value="savings" className="text-white hover:bg-white/10">Savings</SelectItem>
+                      <SelectItem value="investment" className="text-white hover:bg-white/10">Investment</SelectItem>
+                      <SelectItem value="business" className="text-white hover:bg-white/10">Business</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -250,14 +265,25 @@ export default function CreateWallet() {
               <div className="flex justify-end space-x-4">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => router.back()}
-                  disabled={loading}
+                  className="text-white/70 hover:text-white hover:bg-white/10"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? "Creating..." : "Create Wallet"}
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-black-main border-t-transparent rounded-full animate-spin" />
+                      Creating...
+                    </div>
+                  ) : (
+                    "Create Wallet"
+                  )}
                 </Button>
               </div>
             </form>

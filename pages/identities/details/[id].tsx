@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, Building, Tag } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, Building, Tag, BookOpen, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 interface Identity {
   identity_id: string;
@@ -66,10 +67,13 @@ export default function IdentityDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -78,9 +82,9 @@ export default function IdentityDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded">
             {error}
           </div>
         </div>
@@ -90,9 +94,9 @@ export default function IdentityDetails() {
 
   if (!identity) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded">
+          <div className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 px-4 py-3 rounded">
             Identity not found
           </div>
         </div>
@@ -101,150 +105,95 @@ export default function IdentityDetails() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Identities
-          </button>
-        </div>
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Identities</span>
+        </Button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <Card>
+        <div className="grid gap-6">
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <User className="w-5 h-5 text-indigo-500" />
-                <span>Basic Information</span>
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold text-yellow-main">Identity Details</CardTitle>
             </CardHeader>
             <CardContent>
-              <dl className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Full Name</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {identity.first_name} {identity.last_name}
-                    {identity.other_names && ` (${identity.other_names})`}
-                  </dd>
+                  <h3 className="text-lg font-medium text-white mb-4">Basic Information</h3>
+                  <dl className="space-y-4">
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Identity ID</dt>
+                      <dd className="mt-1 text-sm text-white">{identity?.identity_id}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">First Name</dt>
+                      <dd className="mt-1 text-sm text-white">{identity?.first_name}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Last Name</dt>
+                      <dd className="mt-1 text-sm text-white">{identity?.last_name}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Email</dt>
+                      <dd className="mt-1 text-sm text-white">{identity?.email_address}</dd>
+                    </div>
+                  </dl>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Identity Type</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.identity_type}</dd>
+                  <h3 className="text-lg font-medium text-white mb-4">Additional Information</h3>
+                  <dl className="space-y-4">
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Phone Number</dt>
+                      <dd className="mt-1 text-sm text-white">{identity?.phone_number}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Date of Birth</dt>
+                      <dd className="mt-1 text-sm text-white">{identity?.dob}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Verification Status</dt>
+                      <dd className="mt-1">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            identity?.meta_data.verification_data.verification_status === "verified"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-yellow-500/20 text-yellow-400"
+                          }`}
+                        >
+                          {identity?.meta_data.verification_data.verification_status}
+                        </span>
+                      </dd>
+                    </div>
+                  </dl>
                 </div>
-                {identity.organization_name && (
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Organization</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{identity.organization_name}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Category</dt>
-                  <dd className="mt-1">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                      {identity.category}
-                    </span>
-                  </dd>
-                </div>
-              </dl>
+              </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Mail className="w-5 h-5 text-indigo-500" />
-                <span>Contact Information</span>
+              <CardTitle className="flex items-center space-x-2 text-yellow-main">
+                <Calendar className="w-5 h-5" />
+                <span>Timeline</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Email Address</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.email_address}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Phone Number</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.phone_number}</dd>
-                </div>
-              </dl>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MapPin className="w-5 h-5 text-indigo-500" />
-                <span>Address Information</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <dl className="space-y-4">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Street</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.street}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">City</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.city}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">State/Province</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.state}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Postal Code</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.post_code}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Country</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{identity.country}</dd>
-                </div>
-              </dl>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Tag className="w-5 h-5 text-indigo-500" />
-                <span>Additional Information</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <dl className="space-y-4">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Customer ID</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {identity.meta_data.customer_id || "Not specified"}
+                  <dt className="text-sm font-medium text-white/70">Created At</dt>
+                  <dd className="mt-1 text-sm text-white">
+                    {new Date(identity?.created_at).toLocaleString()}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Membership Level</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {identity.meta_data.membership_level}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Preferred Language</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {identity.meta_data.preferred_language}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Verification Status</dt>
-                  <dd className="mt-1">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        identity.meta_data.verification_data.verification_status === "verified"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {identity.meta_data.verification_data.verification_status}
-                    </span>
+                  <dt className="text-sm font-medium text-white/70">Last Updated</dt>
+                  <dd className="mt-1 text-sm text-white">
+                    {new Date(identity?.created_at).toLocaleString()}
                   </dd>
                 </div>
               </dl>

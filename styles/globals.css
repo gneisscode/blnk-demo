@@ -1,3 +1,24 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@theme {
+  --color-blue-primary: #fafafa;
+  --color-blue-border-100: #dbe8fe;
+  --color-primary-700: #F9A601;
+  --color-primary-600: #F9A601;
+  --color-blue-main: #142960;
+  --color-blue-neutral: #1e293b;
+  --color-border-300: #cbd5e1;
+  --color-neutral-200: #e2e8f0;
+  --color-grey-1: #525866;
+  --color-main-900: #0a0d14;
+  --color-primary-base: #375DFB;
+  --color-soft-400: #868C98;
+  --color-grey-50: #F9FAFB;
+  --color-grey-2: #313B46;
+  --color-grey-3: #344054;
+  --color-orange-1: #F56630;
+  --color-black-main:#1A1A1A;
+  --color-yellow-main: #F9A601;
+
+}

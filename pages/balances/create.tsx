@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Identity, Ledger } from "../wallets/create";
+import { ArrowLeft } from "lucide-react";
 
 interface FormData {
   ledger_id: string;
@@ -215,159 +216,192 @@ export default function CreateCardBalance() {
 
   if (isLoadingData) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center">Loading...</div>
+          <div className="flex items-center justify-center">
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-2xl mx-auto">
-        <Card>
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Balances</span>
+        </Button>
+
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <CardTitle>Create Card Balance</CardTitle>
+            <CardTitle className="text-2xl font-bold text-yellow-main">Create Card Balance</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="ledger">Ledger</Label>
-                <Select
-                  value={formData.ledger_id}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, ledger_id: value })
-                  }
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a ledger" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ledgers.map((ledger) => (
-                      <SelectItem
-                        key={ledger.ledger_id}
-                        value={ledger.ledger_id}
-                      >
-                        {ledger.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="ledger" className="text-white/90">Ledger</Label>
+                  <Select
+                    value={formData.ledger_id}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, ledger_id: value })
+                    }
+                    required
+                  >
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Select a ledger" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black-main border-white/10">
+                      {ledgers.map((ledger) => (
+                        <SelectItem
+                          key={ledger.ledger_id}
+                          value={ledger.ledger_id}
+                          className="text-white hover:bg-white/10"
+                        >
+                          {ledger.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="identity">Customer</Label>
-                <Select
-                  value={formData.identity_id}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, identity_id: value })
-                  }
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a customer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {identities.map((identity) => (
-                      <SelectItem
-                        key={identity.identity_id}
-                        value={identity.identity_id}
-                      >
-                        {identity.first_name} {identity.last_name} (
-                        {identity.email_address})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="identity" className="text-white/90">Identity</Label>
+                  <Select
+                    value={formData.identity_id}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, identity_id: value })
+                    }
+                    required
+                  >
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Select an identity" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black-main border-white/10">
+                      {identities.map((identity) => (
+                        <SelectItem
+                          key={identity.identity_id}
+                          value={identity.identity_id}
+                          className="text-white hover:bg-white/10"
+                        >
+                          {identity.first_name} {identity.last_name} ({identity.email_address})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="currency">Currency</Label>
-                <Select
-                  value={formData.currency}
-                  onValueChange={(value) => {
-                    setFormData((prev) => ({ ...prev, currency: value }));
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="GBP">GBP</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="currency" className="text-white/90">Currency</Label>
+                  <Select
+                    value={formData.currency}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, currency: value })
+                    }
+                    required
+                  >
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="USD" className="text-white hover:bg-white/10">USD - US Dollar</SelectItem>
+                      <SelectItem value="EUR" className="text-white hover:bg-white/10">EUR - Euro</SelectItem>
+                      <SelectItem value="GBP" className="text-white hover:bg-white/10">GBP - British Pound</SelectItem>
+                      <SelectItem value="NGN" className="text-white hover:bg-white/10">NGN - Nigerian Naira</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="masked_number">Card Number</Label>
-                <Input
-                  id="masked_number"
-                  name="meta_data.card_details.masked_number"
-                  value={formData.meta_data.card_details.masked_number}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="xxxx-xxxx-xxxx-1234"
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="card_number" className="text-white/90">Card Number</Label>
+                  <Input
+                    type="text"
+                    name="meta_data.card_details.masked_number"
+                    value={formData.meta_data.card_details.masked_number}
+                    onChange={handleInputChange}
+                    placeholder="Enter card number"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
+                    required
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="expiry">Expiry Date</Label>
-                <Input
-                  id="expiry"
-                  name="meta_data.card_details.expiry"
-                  value={formData.meta_data.card_details.expiry}
-                  onChange={handleInputChange}
-                  onBlur={handleExpiryBlur}
-                  required
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  inputMode="numeric"
-                />
-                {expiryError && (
-                  <p className="text-sm text-red-500">{expiryError}</p>
-                )}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="expiry" className="text-white/90">Expiry Date</Label>
+                  <Input
+                    type="text"
+                    name="meta_data.card_details.expiry"
+                    value={formData.meta_data.card_details.expiry}
+                    onChange={handleInputChange}
+                    onBlur={handleExpiryBlur}
+                    placeholder="MM/YY"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
+                    required
+                  />
+                  {expiryError && (
+                    <p className="mt-1 text-sm text-red-400">{expiryError}</p>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="card_type">Card Type</Label>
-                <Select
-                  value={formData.meta_data.card_details.type}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      meta_data: {
-                        ...prev.meta_data,
-                        card_details: {
-                          ...prev.meta_data.card_details,
-                          type: value,
+                <div className="space-y-2">
+                  <Label htmlFor="card_type" className="text-white/90">Card Type</Label>
+                  <Select
+                    value={formData.meta_data.card_details.type}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        meta_data: {
+                          ...formData.meta_data,
+                          card_details: {
+                            ...formData.meta_data.card_details,
+                            type: value,
+                          },
                         },
-                      },
-                    }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select card type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="virtual">Virtual</SelectItem>
-                  </SelectContent>
-                </Select>
+                      })
+                    }
+                    required
+                  >
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Select card type" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black-main border-white/10">
+                      <SelectItem value="virtual" className="text-white hover:bg-white/10">Virtual</SelectItem>
+                      <SelectItem value="physical" className="text-white hover:bg-white/10">Physical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="flex justify-end space-x-4">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => router.back()}
+                  className="text-white/70 hover:text-white hover:bg-white/10"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Creating..." : "Create Card Balance"}
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-black-main border-t-transparent rounded-full animate-spin" />
+                      Creating...
+                    </div>
+                  ) : (
+                    "Create Card Balance"
+                  )}
                 </Button>
               </div>
             </form>

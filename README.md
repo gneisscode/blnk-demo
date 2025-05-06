@@ -1,40 +1,205 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Wallet Management System (WMS)
+
+A modern web application for managing wallets, balances, identities, and ledgers. Built with Next.js and styled with Tailwind CSS.
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- Git
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd blnk-demo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Setup
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+1. Create a `.env` file in the root directory:
+```bash
+cp env.example .env
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+2. The default environment variables are:
+```
+NEXT_PUBLIC_BLNK_API_BASE=http://localhost:5001
+NEXT_PUBLIC_BLNK_API_KEY=HLkmGzUDnxu25xpm9ZDk-nPHqPydSKfFHUNOpls2I-c=
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### 3. Start the Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Navigate to the blnk directory and start the Docker containers:
+```bash
+cd blnk
+docker compose up
+```
 
-## Learn More
+This will start the backend server at `http://localhost:5001`.
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Start the Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+1. In a new terminal, from the project root:
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The frontend will be available at `http://localhost:3000`.
 
-## Deploy on Vercel
+## Application Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Navigation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+The application has a clean navigation bar at the top with:
+- Home
+- Wallets
+
+### Wallets Management
+
+#### List Wallets
+- Navigate to `/wallets/list`
+- View all wallets with their details
+- Each wallet shows:
+  - Balance
+  - Currency
+  - Status
+  - Type
+  - Creation date
+
+#### Create Wallet
+- Click "Create Wallet" on the wallets list page
+- Fill in the required details:
+  - Currency
+  - Wallet Type
+  - Purpose
+  - Description
+
+#### Wallet Details
+- Click on any wallet to view its details
+- View comprehensive information including:
+  - Basic Information
+  - Additional Information
+  - Related Information (Ledger and Identity)
+  - Timeline
+- Actions available:
+  - Fund Wallet
+  - Withdraw from Wallet
+
+### Fund Card Flow
+
+1. Navigate to a card wallet's details
+2. Click "Fund Card"
+3. Select source wallet
+4. Enter amount
+5. Confirm transaction
+
+### Balances Management
+
+#### List Balances
+- Navigate to `/balances/list`
+- View all balances with their details
+- Filter and search capabilities
+
+#### Balance Details
+- View detailed balance information
+- See related transactions
+- Check balance history
+
+### Identities Management
+
+#### List Identities
+- Navigate to `/identities/list`
+- View all identities
+- Search and filter capabilities
+
+#### Identity Details
+- View comprehensive identity information
+- Check verification status
+- View related wallets and transactions
+
+### Ledgers Management
+
+#### List Ledgers
+- Navigate to `/ledgers/list`
+- View all ledgers
+- Search and filter capabilities
+
+#### Ledger Details
+- View ledger information
+- Check related wallets and transactions
+- View ledger statistics
+
+## Common Features
+
+### Loading States
+- Modern loading spinners with double-ring design
+- Consistent loading states across all pages
+
+### Error Handling
+- Clear error messages
+- User-friendly error states
+- Toast notifications for actions
+
+### Responsive Design
+- Mobile-friendly interface
+- Consistent styling across devices
+- Dark theme with yellow accents
+
+## API Integration
+
+The application integrates with the Blnk API running on `localhost:5001`. The API handles:
+- Wallet operations
+- Balance management
+- Identity verification
+- Ledger management
+- Transaction processing
+
+## Development
+
+### Project Structure
+```
+├── components/     # Reusable UI components
+├── pages/         # Next.js pages and API routes
+├── public/        # Static assets
+├── styles/        # Global styles
+├── utils/         # Utility functions
+├── services/      # API services
+├── hooks/         # Custom React hooks
+└── types/         # TypeScript type definitions
+```
+
+### Key Technologies
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Shadcn UI Components
+- Docker
+
+## Troubleshooting
+
+1. If the backend is not accessible:
+   - Check if Docker containers are running
+   - Verify the API base URL in `.env`
+   - Check API key validity
+
+2. If the frontend fails to start:
+   - Ensure all dependencies are installed
+   - Check for port conflicts
+   - Verify environment variables
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+[Add your license information here]

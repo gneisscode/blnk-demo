@@ -202,10 +202,13 @@ export default function WalletDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -214,9 +217,9 @@ export default function WalletDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded">
             {error}
           </div>
         </div>
@@ -226,9 +229,9 @@ export default function WalletDetails() {
 
   if (!wallet) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded">
+          <div className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 px-4 py-3 rounded">
             Wallet not found
           </div>
         </div>
@@ -237,77 +240,85 @@ export default function WalletDetails() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-7xl mx-auto">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-6 flex items-center space-x-2"
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Wallets</span>
         </Button>
 
         <div className="grid gap-6">
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center space-x-2">
-                  <Wallet className="w-5 h-5" />
-                  <span>Wallet Information</span>
-                </CardTitle>
-                <div className="flex space-x-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl font-bold text-yellow-main">Wallet Details</CardTitle>
+                <div className="flex items-center space-x-4">
                   <Dialog open={isFundDialogOpen} onOpenChange={setIsFundDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="flex items-center space-x-2">
-                        <ArrowUp className="w-4 h-4" />
-                        <span>Fund Wallet</span>
+                      <Button
+                        className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
+                      >
+                        Fund Wallet
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-white border border-gray-200">
+                    <DialogContent className="bg-black-main border-white/10">
                       <DialogHeader>
-                        <DialogTitle className="text-gray-900">Fund Wallet</DialogTitle>
-                        <DialogDescription className="text-gray-500">
-                          Enter the amount you want to deposit into this wallet?.
+                        <DialogTitle className="text-yellow-main">Fund Wallet</DialogTitle>
+                        <DialogDescription className="text-white/70">
+                          Enter the amount you want to fund this wallet with.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="fundAmount" className="text-gray-700">Amount ({wallet?.currency})</Label>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="fundAmount" className="text-white/70">Amount</Label>
                           <Input
                             id="fundAmount"
                             type="number"
                             value={fundAmount}
                             onChange={(e) => setFundAmount(e.target.value)}
                             placeholder="Enter amount"
-                            className="bg-white border-gray-200"
+                            className="bg-white/5 border-white/10 text-white"
                           />
                         </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="fundDescription" className="text-gray-700">Description</Label>
+                        <div className="space-y-2">
+                          <Label htmlFor="fundDescription" className="text-white/70">Description</Label>
                           <Input
                             id="fundDescription"
                             value={fundDescription}
                             onChange={(e) => setFundDescription(e.target.value)}
-                            placeholder="Enter description (optional)"
-                            className="bg-white border-gray-200"
+                            placeholder="Enter description"
+                            className="bg-white/5 border-white/10 text-white"
                           />
                         </div>
                       </div>
                       <DialogFooter>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           onClick={() => setIsFundDialogOpen(false)}
-                          disabled={isFunding}
-                          className="border-gray-200"
+                          className="text-white/70 hover:text-white hover:bg-white/10"
                         >
                           Cancel
                         </Button>
                         <Button
                           onClick={handleFund}
                           disabled={isFunding || !fundAmount}
+                          className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
                         >
-                          {isFunding ? "Processing..." : "Deposit"}
+                          {isFunding ? (
+                            <div className="flex items-center space-x-2">
+                              <div className="relative w-4 h-4">
+                                <div className="absolute inset-0 border-2 border-black-main/20 rounded-full"></div>
+                                <div className="absolute inset-0 border-2 border-t-black-main rounded-full animate-spin"></div>
+                              </div>
+                              <span>Processing...</span>
+                            </div>
+                          ) : (
+                            "Fund Wallet"
+                          )}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -315,55 +326,67 @@ export default function WalletDetails() {
 
                   <Dialog open={isWithdrawDialogOpen} onOpenChange={setIsWithdrawDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="flex items-center space-x-2">
-                        <ArrowDown className="w-4 h-4" />
-                        <span>Withdraw</span>
+                      <Button
+                        variant="outline"
+                        className="border-yellow-main text-yellow-main hover:bg-yellow-main/10"
+                      >
+                        Withdraw
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-white border border-gray-200">
+                    <DialogContent className="bg-black-main border-white/10">
                       <DialogHeader>
-                        <DialogTitle className="text-gray-900">Withdraw from Wallet</DialogTitle>
-                        <DialogDescription className="text-gray-500">
-                          Enter the amount you want to withdraw from this wallet?.
+                        <DialogTitle className="text-yellow-main">Withdraw from Wallet</DialogTitle>
+                        <DialogDescription className="text-white/70">
+                          Enter the amount you want to withdraw from this wallet.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="amount" className="text-gray-700">Amount ({wallet?.currency})</Label>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="withdrawAmount" className="text-white/70">Amount</Label>
                           <Input
-                            id="amount"
+                            id="withdrawAmount"
                             type="number"
                             value={withdrawAmount}
                             onChange={(e) => setWithdrawAmount(e.target.value)}
                             placeholder="Enter amount"
-                            className="bg-white border-gray-200"
+                            className="bg-white/5 border-white/10 text-white"
                           />
                         </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="description" className="text-gray-700">Description</Label>
+                        <div className="space-y-2">
+                          <Label htmlFor="withdrawDescription" className="text-white/70">Description</Label>
                           <Input
-                            id="description"
+                            id="withdrawDescription"
                             value={withdrawDescription}
                             onChange={(e) => setWithdrawDescription(e.target.value)}
-                            placeholder="Enter description (optional)"
-                            className="bg-white border-gray-200"
+                            placeholder="Enter description"
+                            className="bg-white/5 border-white/10 text-white"
                           />
                         </div>
                       </div>
                       <DialogFooter>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           onClick={() => setIsWithdrawDialogOpen(false)}
-                          disabled={isWithdrawing}
-                          className="border-gray-200"
+                          className="text-white/70 hover:text-white hover:bg-white/10"
                         >
                           Cancel
                         </Button>
                         <Button
                           onClick={handleWithdraw}
                           disabled={isWithdrawing || !withdrawAmount}
+                          className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
                         >
-                          {isWithdrawing ? "Processing..." : "Withdraw"}
+                          {isWithdrawing ? (
+                            <div className="flex items-center space-x-2">
+                              <div className="relative w-4 h-4">
+                                <div className="absolute inset-0 border-2 border-black-main/20 rounded-full"></div>
+                                <div className="absolute inset-0 border-2 border-t-black-main rounded-full animate-spin"></div>
+                              </div>
+                              <span>Processing...</span>
+                            </div>
+                          ) : (
+                            "Withdraw"
+                          )}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -374,51 +397,47 @@ export default function WalletDetails() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    Basic Information
-                  </h3>
+                  <h3 className="text-lg font-medium text-white mb-4">Basic Information</h3>
                   <dl className="space-y-4">
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Wallet ID</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{wallet?.balance_id}</dd>
+                      <dt className="text-sm font-medium text-white/70">Wallet ID</dt>
+                      <dd className="mt-1 text-sm text-white">{wallet?.balance_id}</dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Currency</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{wallet?.currency}</dd>
+                      <dt className="text-sm font-medium text-white/70">Currency</dt>
+                      <dd className="mt-1 text-sm text-white">{wallet?.currency}</dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Balance</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dt className="text-sm font-medium text-white/70">Balance</dt>
+                      <dd className="mt-1 text-sm text-white">
                         {wallet?.balance} {wallet?.currency}
                       </dd>
                     </div>
                   </dl>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    Additional Information
-                  </h3>
+                  <h3 className="text-lg font-medium text-white mb-4">Additional Information</h3>
                   <dl className="space-y-4">
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Wallet Type</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dt className="text-sm font-medium text-white/70">Wallet Type</dt>
+                      <dd className="mt-1 text-sm text-white">
                         {wallet?.meta_data?.wallet_type}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Purpose</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dt className="text-sm font-medium text-white/70">Purpose</dt>
+                      <dd className="mt-1 text-sm text-white">
                         {wallet?.meta_data?.purpose}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Status</dt>
+                      <dt className="text-sm font-medium text-white/70">Status</dt>
                       <dd className="mt-1">
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             wallet?.meta_data?.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-yellow-500/20 text-yellow-400"
                           }`}
                         >
                           {wallet?.meta_data?.status}
@@ -431,9 +450,9 @@ export default function WalletDetails() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className="flex items-center space-x-2 text-yellow-main">
                 <BookOpen className="w-5 h-5" />
                 <span>Related Information</span>
               </CardTitle>
@@ -442,14 +461,12 @@ export default function WalletDetails() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">
-                      Ledger Information
-                    </h3>
+                    <h3 className="text-lg font-medium text-white">Ledger Information</h3>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => router.push(`/ledgers/details/${wallet?.ledger_id}`)}
-                      className="flex items-center space-x-2"
+                      className="text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10 flex items-center space-x-2"
                     >
                       <span>View Details</span>
                       <ExternalLink className="w-4 h-4" />
@@ -457,21 +474,19 @@ export default function WalletDetails() {
                   </div>
                   <dl className="space-y-4">
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Ledger Name</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{ledger?.name || 'Loading...'}</dd>
+                      <dt className="text-sm font-medium text-white/70">Ledger Name</dt>
+                      <dd className="mt-1 text-sm text-white">{ledger?.name || 'Loading...'}</dd>
                     </div>
                   </dl>
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">
-                      Identity Information
-                    </h3>
+                    <h3 className="text-lg font-medium text-white">Identity Information</h3>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => router.push(`/identities/details/${wallet?.identity_id}`)}
-                      className="flex items-center space-x-2"
+                      className="text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10 flex items-center space-x-2"
                     >
                       <span>View Details</span>
                       <ExternalLink className="w-4 h-4" />
@@ -479,8 +494,8 @@ export default function WalletDetails() {
                   </div>
                   <dl className="space-y-4">
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Name</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dt className="text-sm font-medium text-white/70">Name</dt>
+                      <dd className="mt-1 text-sm text-white">
                         {identity ? `${identity.first_name} ${identity.last_name}` : 'Loading...'}
                       </dd>
                     </div>
@@ -490,9 +505,9 @@ export default function WalletDetails() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className="flex items-center space-x-2 text-yellow-main">
                 <Calendar className="w-5 h-5" />
                 <span>Timeline</span>
               </CardTitle>
@@ -500,8 +515,8 @@ export default function WalletDetails() {
             <CardContent>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Created At</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-white/70">Created At</dt>
+                  <dd className="mt-1 text-sm text-white">
                     {new Date(wallet?.created_at).toLocaleString()}
                   </dd>
                 </div>

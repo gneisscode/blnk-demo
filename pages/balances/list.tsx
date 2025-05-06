@@ -100,10 +100,13 @@ export default function ListCardBalances() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -112,9 +115,9 @@ export default function ListCardBalances() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded">
             {error}
           </div>
         </div>
@@ -123,18 +126,18 @@ export default function ListCardBalances() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Card Balances</h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <h1 className="text-3xl font-bold text-yellow-main">Card Balances</h1>
+            <p className="mt-1 text-sm text-white/70">
               Manage and view all card balances in the system
             </p>
           </div>
           <Button
             onClick={() => router.push("/balances/create")}
-            className="flex items-center space-x-2"
+            className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200 flex items-center space-x-2"
           >
             <Plus className="w-4 h-4" />
             <span>Create Card Balance</span>
@@ -142,16 +145,16 @@ export default function ListCardBalances() {
         </div>
 
         {balances.length === 0 ? (
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <CreditCard className="w-12 h-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-1">No card balances found</h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <CreditCard className="w-12 h-12 text-yellow-main mb-4" />
+              <h3 className="text-lg font-medium text-white mb-1">No card balances found</h3>
+              <p className="text-sm text-white/70 mb-4">
                 Get started by creating a new card balance
               </p>
               <Button
                 onClick={() => router.push("/balances/create")}
-                className="flex items-center space-x-2"
+                className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200 flex items-center space-x-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create Card Balance</span>
@@ -161,30 +164,30 @@ export default function ListCardBalances() {
         ) : (
           <div className="grid gap-6">
             {balances.map((balance) => (
-              <Card key={balance.balance_id} className="hover:shadow-md transition-shadow">
+              <Card key={balance.balance_id} className="bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 transition-all duration-200">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
-                        <h3 className="text-lg font-medium text-gray-900">
+                        <h3 className="text-lg font-medium text-white">
                           {balance.currency} {balance.balance.toFixed(2)}
                         </h3>
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             balance?.meta_data?.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-yellow-500/20 text-yellow-400"
                           }`}
                         >
                           {balance?.meta_data?.status}
                         </span>
                       </div>
-                      <div className="mt-1 text-sm text-gray-500">
+                      <div className="mt-1 text-sm text-white/70">
                         <p>Balance ID: {balance.balance_id}</p>
                         <p>Ledger: {balance.ledger_name}</p>
                         <p>Customer: {balance.customer_name}</p>
                       </div>
-                      <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                      <div className="mt-2 flex items-center space-x-4 text-sm text-white/60">
                         <span>Type: {balance?.meta_data?.wallet_type}</span>
                         <span>Purpose: {balance?.meta_data?.purpose}</span>
                         <span>
@@ -195,7 +198,7 @@ export default function ListCardBalances() {
                     <Button
                       variant="ghost"
                       onClick={() => router.push(`/balances/details/${balance.balance_id}`)}
-                      className="flex items-center space-x-2"
+                      className="text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10 flex items-center space-x-2"
                     >
                       <span>View Details</span>
                       <ArrowRight className="w-4 h-4" />

@@ -87,43 +87,44 @@ export default function CreateLedgerPage() {
   };
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen p-8 bg-black-main">
+      <div className="max-w-4xl mx-auto">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-6 flex items-center space-x-2"
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Ledgers</span>
         </Button>
 
-        <Card>
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <CardTitle>Create New Ledger</CardTitle>
+            <CardTitle className="text-2xl font-bold text-yellow-main">Create New Ledger</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
+                className="space-y-8"
               >
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ledger Name</FormLabel>
+                      <FormLabel className="text-white/90">Ledger Name</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter ledger name"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
+                      <FormDescription className="text-white/70">
                         A unique name for your ledger
                       </FormDescription>
-                      <FormMessage />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -133,17 +134,18 @@ export default function CreateLedgerPage() {
                   name="meta_data.project_owner"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Project Owner</FormLabel>
+                      <FormLabel className="text-white/90">Project Owner</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter project owner"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
+                      <FormDescription className="text-white/70">
                         The organization or individual managing this ledger
                       </FormDescription>
-                      <FormMessage />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -153,18 +155,18 @@ export default function CreateLedgerPage() {
                   name="meta_data.description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel className="text-white/90">Description</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Enter description"
+                          className="min-h-[100px] bg-white/5 border-white/10 text-white placeholder:text-white/50 focus:border-yellow-main/50 focus:ring-yellow-main/20"
                           {...field}
-                          className="min-h-[100px]"
                         />
                       </FormControl>
-                      <FormDescription>
+                      <FormDescription className="text-white/70">
                         Detailed description of the ledger's purpose
                       </FormDescription>
-                      <FormMessage />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -173,10 +175,11 @@ export default function CreateLedgerPage() {
                   <Button
                     type="submit"
                     disabled={loading}
+                    className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
                   >
                     {loading ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-black-main border-t-transparent rounded-full animate-spin" />
                         Creating...
                       </div>
                     ) : (

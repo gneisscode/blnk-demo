@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CreditCard } from "lucide-react";
+import { ArrowLeft, CreditCard, BookOpen, ExternalLink, Calendar } from "lucide-react";
 import { toast } from "sonner";
 
 interface CardBalance {
@@ -49,10 +49,36 @@ interface IdentityDetails {
   email: string;
 }
 
-interface BalanceWithDetails extends CardBalance {
-  ledger_name?: string;
-  customer_name?: string;
-  customer_email?: string;
+interface BalanceWithDetails {
+  balance_id: string;
+  currency: string;
+  balance: number;
+  credit_balance: number;
+  debit_balance: number;
+  currency_multiplier: number;
+  inflight_balance: number | null;
+  inflight_expires_at: string;
+  created_at: string;
+  updated_at: string;
+  version: number;
+  meta_data: {
+    status: string;
+    type: string;
+    description?: string;
+    purpose: string;
+    wallet_type: string;
+    card_details: {
+      masked_number: string;
+      expiry: string;
+      type: string;
+    };
+  };
+  ledger_id: string;
+  identity_id: string;
+  amount: number;
+  status: string;
+  type: string;
+  description?: string;
 }
 
 export default function CardBalanceDetails() {
@@ -60,83 +86,88 @@ export default function CardBalanceDetails() {
   const { id } = router.query;
   const [balance, setBalance] = useState<BalanceWithDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [ledger, setLedger] = useState<any>(null);
+  const [identity, setIdentity] = useState<any>(null);
 
   useEffect(() => {
-    if (id) {
-      fetchBalanceDetails();
-    }
-  }, [id]);
+    if (!id) return;
 
-  const fetchBalanceDetails = async () => {
-    try {
-      const [balanceResponse, ledgersResponse, identitiesResponse] = await Promise.all([
-        fetch(`/api/balances/${id}`),
-        fetch("/api/ledgers"),
-        fetch("/api/identities"),
-      ]);
-
-      if (!balanceResponse.ok || !ledgersResponse.ok || !identitiesResponse.ok) {
-        throw new Error("Failed to fetch data");
+    const fetchBalance = async () => {
+      try {
+        const response = await fetch(`/api/balances/${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch balance details');
+        }
+        const data = await response.json();
+        setBalance(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const [balanceData, ledgersData, identitiesData] = await Promise.all([
-        balanceResponse.json(),
-        ledgersResponse.json(),
-        identitiesResponse.json(),
-      ]);
+    const fetchRelatedData = async () => {
+      try {
+        if (balance) {
+          const [ledgerResponse, identityResponse] = await Promise.all([
+            fetch(`/api/ledgers/${balance.ledger_id}`),
+            fetch(`/api/identities/${balance.identity_id}`)
+          ]);
 
-      // Create lookup maps for ledgers and identities
-      const ledgerMap = new Map(ledgersData.map((ledger: Ledger) => [ledger.ledger_id, ledger.name]));
-      const identityMap = new Map<string, IdentityDetails>(
-        identitiesData.map((identity: Identity) => [
-          identity.identity_id,
-          {
-            name: `${identity.first_name} ${identity.last_name}`,
-            email: identity.email_address,
-          },
-        ])
-      );
+          if (ledgerResponse.ok) {
+            const ledgerData = await ledgerResponse.json();
+            setLedger(ledgerData);
+          }
 
-      // Enhance balance with ledger and customer details
-      const enhancedBalance = {
-        ...balanceData,
-        ledger_name: ledgerMap.get(balanceData.ledger_id) || "Unknown Ledger",
-        customer_name: balanceData.identity_id
-          ? identityMap.get(balanceData.identity_id)?.name || "Unknown Customer"
-          : "Not assigned",
-        customer_email: balanceData.identity_id
-          ? identityMap.get(balanceData.identity_id)?.email
-          : undefined,
-      };
+          if (identityResponse.ok) {
+            const identityData = await identityResponse.json();
+            setIdentity(identityData);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching related data:', err);
+      }
+    };
 
-      setBalance(enhancedBalance);
-      setLoading(false);
-    } catch (err: any) {
-      setError(err.message || "Error fetching balance details");
-      setLoading(false);
-      toast.error("Failed to load balance details");
-    }
-  };
+    fetchBalance();
+    fetchRelatedData();
+  }, [id, balance?.ledger_id, balance?.identity_id]);
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 border-4 border-yellow-main/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-yellow-main rounded-full animate-spin"></div>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  if (error || !balance) {
+  if (error) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 bg-black-main">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            {error || "Balance not found"}
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded">
+            {error}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!balance) {
+    return (
+      <div className="min-h-screen p-8 bg-black-main">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 px-4 py-3 rounded">
+            Balance not found
           </div>
         </div>
       </div>
@@ -144,171 +175,209 @@ export default function CardBalanceDetails() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-black-main">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="flex items-center space-x-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Balances</span>
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center space-x-2 text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Balances</span>
+        </Button>
 
         <div className="grid gap-6">
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <CreditCard className="w-6 h-6" />
-                  <CardTitle>Card Balance Details</CardTitle>
-                </div>
-                <Button
-                  onClick={() => router.push(`/wallets/fund-card?cardId=${balance.balance_id}`)}
-                  className="flex items-center space-x-2"
-                >
-                  <CreditCard className="w-4 h-4" />
-                  <span>Fund Card</span>
-                </Button>
+                <CardTitle className="text-2xl font-bold text-yellow-main">Balance Details</CardTitle>
+                {balance?.meta_data?.wallet_type === "card" && (
+                  <Button
+                    onClick={() => router.push(`/wallets/fund-card?cardId=${balance.balance_id}`)}
+                    className="bg-yellow-main text-black-main hover:bg-yellow-main/90 transition-colors duration-200"
+                  >
+                    Fund Card
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Balance ID</h3>
-                    <p className="mt-1 text-lg">{balance.balance_id}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Current Balance</h3>
-                    <p className="mt-1 text-lg font-semibold">
-                      {balance.currency} {balance.balance.toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Credit Balance</h3>
-                    <p className="mt-1 text-lg">
-                      {balance.currency} {balance.credit_balance.toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Debit Balance</h3>
-                    <p className="mt-1 text-lg">
-                      {balance.currency} {balance.debit_balance.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Ledger</h3>
-                    <p className="mt-1 text-lg">{balance.ledger_name}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Customer</h3>
-                    <p className="mt-1 text-lg">{balance.customer_name}</p>
-                    {balance.customer_email && (
-                      <p className="mt-1 text-sm text-gray-500">{balance.customer_email}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium text-white mb-4">Basic Information</h3>
+                  <dl className="space-y-4">
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Balance ID</dt>
+                      <dd className="mt-1 text-sm text-white">{balance?.balance_id}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Currency</dt>
+                      <dd className="mt-1 text-sm text-white">{balance?.currency}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Balance</dt>
+                      <dd className="mt-1 text-sm text-white">
+                        {(balance?.balance / 100).toFixed(2)} {balance?.currency}
+                      </dd>
+                    </div>
+                    {balance?.meta_data?.wallet_type === "card" && (
+                      <>
+                        <div>
+                          <dt className="text-sm font-medium text-white/70">Credit Balance</dt>
+                          <dd className="mt-1 text-sm text-white">
+                            {(balance?.credit_balance / 100).toFixed(2)} {balance?.currency}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-white/70">Debit Balance</dt>
+                          <dd className="mt-1 text-sm text-white">
+                            {(balance?.debit_balance / 100).toFixed(2)} {balance?.currency}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-white/70">In-flight Balance</dt>
+                          <dd className="mt-1 text-sm text-white">
+                            {((balance?.inflight_balance || 0) / 100).toFixed(2)} {balance?.currency}
+                          </dd>
+                        </div>
+                      </>
                     )}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Status</h3>
-                    <p className="mt-1">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          balance.meta_data.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
-                      >
-                        {balance.meta_data.status}
-                      </span>
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Created At</h3>
-                    <p className="mt-1 text-lg">
-                      {new Date(balance.created_at).toLocaleString()}
-                    </p>
-                  </div>
+                  </dl>
                 </div>
-              </div>
-
-              <div className="mt-8 pt-8 border-t">
-                <h3 className="text-lg font-medium mb-4">Card Details</h3>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Card Number</h4>
-                    <p className="mt-1 text-lg">{balance.meta_data.card_details.masked_number}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Expiry Date</h4>
-                    <p className="mt-1 text-lg">{balance.meta_data.card_details.expiry}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Card Type</h4>
-                    <p className="mt-1 text-lg capitalize">{balance.meta_data.card_details.type}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Purpose</h4>
-                    <p className="mt-1 text-lg">{balance.meta_data.purpose}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Wallet Type</h4>
-                    <p className="mt-1 text-lg capitalize">{balance.meta_data.wallet_type}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Version</h4>
-                    <p className="mt-1 text-lg">{balance.version}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-8 border-t">
-                <h3 className="text-lg font-medium mb-4">Balance Information</h3>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Current Balance</h4>
-                    <p className="mt-1 text-lg font-semibold">
-                      {balance.currency} {(balance.balance / 100).toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Credit Balance</h4>
-                    <p className="mt-1 text-lg">
-                      {balance.currency} {(balance.credit_balance / 100).toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Debit Balance</h4>
-                    <p className="mt-1 text-lg">
-                      {balance.currency} {(balance.debit_balance / 100).toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Currency Multiplier</h4>
-                    <p className="mt-1 text-lg">{balance.currency_multiplier}</p>
-                  </div>
-                  {balance.inflight_balance !== null && (
+                <div>
+                  <h3 className="text-lg font-medium text-white mb-4">Additional Information</h3>
+                  <dl className="space-y-4">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-500">Inflight Balance</h4>
-                      <p className="mt-1 text-lg">
-                        {balance.currency} {(balance.inflight_balance / 100).toFixed(2)}
-                      </p>
+                      <dt className="text-sm font-medium text-white/70">Status</dt>
+                      <dd className="mt-1">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            balance?.meta_data?.status === "active"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-yellow-500/20 text-yellow-400"
+                          }`}
+                        >
+                          {balance?.meta_data?.status}
+                        </span>
+                      </dd>
                     </div>
-                  )}
-                  {balance.inflight_expires_at !== "0001-01-01T00:00:00Z" && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-500">Inflight Expires At</h4>
-                      <p className="mt-1 text-lg">
-                        {new Date(balance.inflight_expires_at).toLocaleString()}
-                      </p>
+                      <dt className="text-sm font-medium text-white/70">Type</dt>
+                      <dd className="mt-1 text-sm text-white capitalize">
+                        {balance?.meta_data?.wallet_type}
+                      </dd>
                     </div>
-                  )}
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Purpose</dt>
+                      <dd className="mt-1 text-sm text-white capitalize">
+                        {balance?.meta_data?.purpose?.replace(/_/g, ' ')}
+                      </dd>
+                    </div>
+                    {balance?.meta_data?.wallet_type === "card" && (
+                      <>
+                        <div>
+                          <dt className="text-sm font-medium text-white/70">Card Type</dt>
+                          <dd className="mt-1 text-sm text-white capitalize">
+                            {balance?.meta_data?.card_details?.type}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-white/70">Card Number</dt>
+                          <dd className="mt-1 text-sm text-white">
+                            {balance?.meta_data?.card_details?.masked_number}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-white/70">Expiry Date</dt>
+                          <dd className="mt-1 text-sm text-white">
+                            {balance?.meta_data?.card_details?.expiry}
+                          </dd>
+                        </div>
+                      </>
+                    )}
+                  </dl>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-yellow-main">
+                <BookOpen className="w-5 h-5" />
+                <span>Related Information</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-white">Ledger Information</h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/ledgers/details/${balance?.ledger_id}`)}
+                      className="text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10 flex items-center space-x-2"
+                    >
+                      <span>View Details</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <dl className="space-y-4">
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Ledger Name</dt>
+                      <dd className="mt-1 text-sm text-white">{ledger?.name || 'Loading...'}</dd>
+                    </div>
+                  </dl>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-white">Identity Information</h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/identities/details/${balance?.identity_id}`)}
+                      className="text-yellow-main hover:text-yellow-main/90 hover:bg-yellow-main/10 flex items-center space-x-2"
+                    >
+                      <span>View Details</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <dl className="space-y-4">
+                    <div>
+                      <dt className="text-sm font-medium text-white/70">Name</dt>
+                      <dd className="mt-1 text-sm text-white">
+                        {identity ? `${identity.first_name} ${identity.last_name}` : 'Loading...'}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-yellow-main">
+                <Calendar className="w-5 h-5" />
+                <span>Timeline</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <dl className="space-y-4">
+                <div>
+                  <dt className="text-sm font-medium text-white/70">Created At</dt>
+                  <dd className="mt-1 text-sm text-white">
+                    {new Date(balance?.created_at).toLocaleString()}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-white/70">Last Updated</dt>
+                  <dd className="mt-1 text-sm text-white">
+                    {new Date(balance?.updated_at).toLocaleString()}
+                  </dd>
+                </div>
+              </dl>
             </CardContent>
           </Card>
         </div>
