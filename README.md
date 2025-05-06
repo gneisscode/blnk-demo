@@ -102,19 +102,18 @@ The application has a clean navigation bar at the top with:
 #### List Balances
 - Navigate to `/balances/list`
 - View all balances with their details
-- Filter and search capabilities
+
 
 #### Balance Details
 - View detailed balance information
-- See related transactions
-- Check balance history
+
 
 ### Identities Management
 
 #### List Identities
 - Navigate to `/identities/list`
 - View all identities
-- Search and filter capabilities
+
 
 #### Identity Details
 - View comprehensive identity information
@@ -126,28 +125,15 @@ The application has a clean navigation bar at the top with:
 #### List Ledgers
 - Navigate to `/ledgers/list`
 - View all ledgers
-- Search and filter capabilities
+
 
 #### Ledger Details
 - View ledger information
 - Check related wallets and transactions
-- View ledger statistics
 
-## Common Features
 
-### Loading States
-- Modern loading spinners with double-ring design
-- Consistent loading states across all pages
 
-### Error Handling
-- Clear error messages
-- User-friendly error states
-- Toast notifications for actions
 
-### Responsive Design
-- Mobile-friendly interface
-- Consistent styling across devices
-- Dark theme with yellow accents
 
 ## API Integration
 
